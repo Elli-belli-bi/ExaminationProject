@@ -62,22 +62,22 @@ public class MyStepdefs {
 
     @And("I add a unique email to the Email Address field")
     public void iAddAUniqueEmailToTheEmailAddressField() {
-        account.email(uniqueEmail);
+        account.fillEmails(uniqueEmail, "email");
     }
 
     @And("I confirm the same unique email in the Confirm Email Address field")
     public void iConfirmTheSameUniqueEmailInTheConfirmEmailAddressField() {
-        account.confirmEmail(uniqueEmail);
+        account.fillEmails(uniqueEmail, "confirmEmail");
     }
 
     @And("{string} in the password field")
     public void inThePasswordField(String value) {
-       account.password(value);
+        account.fillPasswords(value, "password");
     }
 
     @And("{string} in the retype password field")
     public void inTheRetypePasswordField(String value) {
-        account.retypePassword(value);
+        account.fillPasswords(value, "confirmPassword");
     }
 
     @And("Check the {string} checkbox")

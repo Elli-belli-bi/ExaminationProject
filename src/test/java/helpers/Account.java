@@ -46,24 +46,24 @@ public class Account {
         return "test_" + timestamp + "@test.se";
     }
 
-    public void email(String email) {
-        WebElement emailField = driver.findElement(By.name("EmailAddress"));
-        emailField.sendKeys(email);
+    public void fillEmails(String email, String field) {
+        if (field.equals("email")) {
+            WebElement emailField = driver.findElement(By.name("EmailAddress"));
+            emailField.sendKeys(email);
+        } else if (field.equals("confirmEmail")) {
+            WebElement confirmEmailField = driver.findElement(By.name("ConfirmEmailAddress"));
+            confirmEmailField.sendKeys(email);
+        }
     }
 
-    public void confirmEmail(String email) {
-        WebElement confirmEmailField = driver.findElement(By.name("ConfirmEmailAddress"));
-        confirmEmailField.sendKeys(email);
-    }
-
-    public void password(String password) {
-        WebElement passwordField = driver.findElement(By.name("Password"));
-        passwordField.sendKeys(password);
-    }
-
-    public void retypePassword(String confirmPassword) {
-        WebElement confirmPasswordField = driver.findElement(By.name("ConfirmPassword"));
-        confirmPasswordField.sendKeys(confirmPassword);
+    public void fillPasswords(String password, String field) {
+        if (field.equals("password")) {
+            WebElement passwordField = driver.findElement(By.name("Password"));
+            passwordField.sendKeys(password);
+        } else if (field.equals("confirmPassword")) {
+            WebElement confirmPasswordField = driver.findElement(By.name("ConfirmPassword"));
+            confirmPasswordField.sendKeys(password);
+        }
     }
 
     public void clickCheckbox(String checkboxName) {
