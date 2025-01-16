@@ -23,20 +23,28 @@ public class Account {
     public void dateOfBirth(String dateOfBirth) {
         WebElement birthDate = driver.findElement(By.name("DateOfBirth"));
         birthDate.sendKeys(dateOfBirth);
+        closeDatePicker();
+    }
 
-        // Click on the page to close the date picker
+    // Click else where on the page to close the date picker
+    private void closeDatePicker() {
         Actions actions = new Actions(driver);
         actions.moveByOffset(100, 200).click().perform();
     }
 
-    public void firstName(String firstName) {
-        WebElement firstNameField = driver.findElement(By.name("Forename"));
-        firstNameField.sendKeys(firstName);
-    }
-
-    public void lastName(String lastName) {
-        WebElement lastNameField = driver.findElement(By.name("Surname"));
-        lastNameField.sendKeys(lastName);
+    public void fillNameFields(String field, String value) {
+        WebElement nameFields;
+        switch (field.toLowerCase()) {
+            case "firstname":
+                nameFields = driver.findElement(By.name("Forename"));
+                break;
+            case "lastname":
+                nameFields = driver.findElement(By.name("Surname"));
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid field type: " + field);
+        }
+        nameFields.sendKeys(value);
     }
 
     // Unique e-mail based on time stamp
@@ -47,28 +55,34 @@ public class Account {
     }
 
     public void fillEmails(String email, String field) {
+        WebElement emailField;
         if (field.equals("email")) {
-            WebElement emailField = driver.findElement(By.name("EmailAddress"));
-            emailField.sendKeys(email);
+            emailField = driver.findElement(By.name("EmailAddress"));
         } else if (field.equals("confirmEmail")) {
-            WebElement confirmEmailField = driver.findElement(By.name("ConfirmEmailAddress"));
-            confirmEmailField.sendKeys(email);
+            emailField = driver.findElement(By.name("ConfirmEmailAddress"));
+        } else {
+            throw new IllegalArgumentException("Unknown field: " + field);
         }
+        emailField.sendKeys(email);
     }
 
     public void fillPasswords(String password, String field) {
-        if (field.equals("password")) {
-            WebElement passwordField = driver.findElement(By.name("Password"));
-            passwordField.sendKeys(password);
-        } else if (field.equals("confirmPassword")) {
-            WebElement confirmPasswordField = driver.findElement(By.name("ConfirmPassword"));
-            confirmPasswordField.sendKeys(password);
+        WebElement passwordField;
+        switch (field) {
+            case "password":
+                passwordField = driver.findElement(By.name("Password"));
+                break;
+            case "confirmPassword":
+                passwordField = driver.findElement(By.name("ConfirmPassword"));
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown password field: " + field);
         }
+        passwordField.sendKeys(password);
     }
 
     public void clickCheckbox(String checkboxName) {
         WebElement checkbox;
-
         switch (checkboxName.toLowerCase()) {
             case "termsandconditions":
                 checkbox = driver.findElement(By.xpath("//label[@for='sign_up_25']"));
@@ -82,7 +96,6 @@ public class Account {
             default:
                 throw new IllegalArgumentException("Invalid checkbox name: " + checkboxName);
         }
-
         checkbox.click();
     }
 
@@ -93,7 +106,6 @@ public class Account {
 
     public WebElement getMessage(String messageType) {
         WebElement message;
-
         switch (messageType.toLowerCase()) {
             case "error":
                 message = visible(By.cssSelector(".warning.field-validation-error"));
@@ -104,7 +116,6 @@ public class Account {
             default:
                 throw new IllegalArgumentException("Unknown message type: " + messageType);
         }
-
         return message;
     }
 

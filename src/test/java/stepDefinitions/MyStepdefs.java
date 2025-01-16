@@ -34,6 +34,8 @@ public class MyStepdefs {
         driver.manage().window().maximize();
         account = new Account(driver);
         uniqueEmail = account.generateUniqueEmail();
+        // Log the scenario start
+        System.out.println("Starting Scenario: " + scenario.getName());
     }
 
     @Given("I am on the registration page")
@@ -48,15 +50,15 @@ public class MyStepdefs {
 
     @And("{string} in the First Name field")
     public void inTheFirstNameField(String value) {
-        account.firstName(value);
+        account.fillNameFields("firstname", value);
     }
 
     @And("{string} in the Last Name field")
     public void inTheLastNameField(String value) {
         if (value.isEmpty()) {
-            account.lastName("");  // Empty last name
+            account.fillNameFields("lastname", ""); // Empty last name
         } else {
-            account.lastName(value);
+            account.fillNameFields("lastname", value);
         }
     }
 
@@ -95,7 +97,7 @@ public class MyStepdefs {
         String expectedUrlPart = "https://membership.basketballengland.co.uk/Account/SignUpConfirmation";
         String currentUrl = driver.getCurrentUrl();
         assert currentUrl != null;
-        assertTrue("URL does not contain expected confirmation path", currentUrl.contains(expectedUrlPart));
+        assertTrue("The user is not on the confirmation page.", currentUrl.contains(expectedUrlPart));
     }
 
     @And("A confirmation message should be visible")
@@ -114,7 +116,10 @@ public class MyStepdefs {
     }
 
     @After
-    public void tearDown(){
+    public void tearDown(Scenario scenario) {
+        // Log the scenario completion
+        System.out.println("Scenario: " + scenario.getName() + " has been completed.");
+
         if (driver != null) {
             driver.quit();
         }
