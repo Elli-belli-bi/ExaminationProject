@@ -1,6 +1,6 @@
 package stepDefinitions;
 
-import helpers.Account;
+import helpers.AccountHelpers;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 import io.cucumber.java.en.And;
@@ -16,10 +16,10 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class MyStepdefs {
+public class AccountStepDefinitions {
 
     private WebDriver driver;
-    private Account account;
+    private AccountHelpers accountHelpers;
     private String uniqueEmail;
 
     @Before
@@ -32,8 +32,8 @@ public class MyStepdefs {
             driver = new ChromeDriver();
         }
         driver.manage().window().maximize();
-        account = new Account(driver);
-        uniqueEmail = account.generateUniqueEmail();
+        accountHelpers = new AccountHelpers(driver);
+        uniqueEmail = accountHelpers.generateUniqueEmail();
         // Log the scenario start
         System.out.println("Starting Scenario: " + scenario.getName());
     }
@@ -45,51 +45,55 @@ public class MyStepdefs {
 
     @When("I add {string} to the DateOfBirth field")
     public void iAddToTheDateOfBirthField(String value) {
-        account.dateOfBirth(value);
+        accountHelpers.dateOfBirth(value);
     }
 
     @And("{string} in the First Name field")
     public void inTheFirstNameField(String value) {
-        account.fillNameFields("firstname", value);
+        WebElement firstNameField = accountHelpers.fillNameFields("firstname", value);
+        assertTrue("First name field should be visible", firstNameField.isDisplayed());
     }
 
     @And("{string} in the Last Name field")
     public void inTheLastNameField(String value) {
+        WebElement lastNameField;
         if (value.isEmpty()) {
-            account.fillNameFields("lastname", ""); // Empty last name
+            lastNameField = accountHelpers.fillNameFields("lastname", "");
         } else {
-            account.fillNameFields("lastname", value);
+            lastNameField = accountHelpers.fillNameFields("lastname", value);
         }
+        assertTrue("Last name field should be visible", lastNameField.isDisplayed());
+        assertEquals("Last name should match the provided value", value, lastNameField.getAttribute("value"));
     }
 
     @And("I add a unique email to the Email Address field")
     public void iAddAUniqueEmailToTheEmailAddressField() {
-        account.fillEmails(uniqueEmail, "email");
+        accountHelpers.fillEmails(uniqueEmail, "email");
     }
 
     @And("I confirm the same unique email in the Confirm Email Address field")
     public void iConfirmTheSameUniqueEmailInTheConfirmEmailAddressField() {
-        account.fillEmails(uniqueEmail, "confirmEmail");
+        accountHelpers.fillEmails(uniqueEmail, "confirmEmail");
     }
 
     @And("{string} in the password field")
     public void inThePasswordField(String value) {
-        account.fillPasswords(value, "password");
+        accountHelpers.fillPasswords(value, "password");
     }
 
     @And("{string} in the retype password field")
     public void inTheRetypePasswordField(String value) {
-        account.fillPasswords(value, "confirmPassword");
+        accountHelpers.fillPasswords(value, "confirmPassword");
     }
 
     @And("Check the {string} checkbox")
     public void checkTheCheckbox(String checkboxName) {
-        account.clickCheckbox(checkboxName);
+        accountHelpers.clickCheckbox(checkboxName);
     }
 
     @And("Click the Confirm and Join button")
     public void clickTheConfirmAndJoinButton() {
-        account.clickConfirmAndJoinButton();
+        accountHelpers.clickConfirmAndJoinButton();
     }
 
     @Then("I should be redirected to the confirmation page")
@@ -102,16 +106,16 @@ public class MyStepdefs {
 
     @And("A confirmation message should be visible")
     public void aConfirmationMessageShouldBeVisible() {
-        WebElement actualConfirmationMessage = account.getMessage("confirmation");
+        WebElement actualConfirmationMessage = accountHelpers.getMessage("confirmation");
         String expectedConfirmationMessage = "THANK YOU FOR CREATING AN ACCOUNT WITH BASKETBALL ENGLAND";
-        assertTrue(actualConfirmationMessage.isDisplayed());
+        assertTrue("Confirmation message should be visible", actualConfirmationMessage.isDisplayed());
         assertEquals(expectedConfirmationMessage, actualConfirmationMessage.getText());
     }
 
     @Then("Error {string} is displayed")
     public void ErrorIsDisplayed(String expectedErrorMessage) {
-        WebElement error = account.getMessage("error");
-        assertTrue(error.isDisplayed());
+        WebElement error = accountHelpers.getMessage("error");
+        assertTrue("Error message should be visible", error.isDisplayed());
         assertEquals(expectedErrorMessage, error.getText());
     }
 

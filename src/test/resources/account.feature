@@ -14,9 +14,9 @@ Feature: Account
     And I confirm the same unique email in the Confirm Email Address field
     And "abcd43z21" in the password field
     And "abcd43z21" in the retype password field
-    And Check the "termsandconditions" checkbox
-    And Check the "notminor" checkbox
-    And Check the "ethicsandconduct" checkbox
+    And Check the "Terms and Conditions" checkbox
+    And Check the "Not a minor" checkbox
+    And Check the "Ethics and Conduct" checkbox
     And Click the Confirm and Join button
     Then I should be redirected to the confirmation page
     And A confirmation message should be visible
@@ -30,9 +30,9 @@ Feature: Account
     And I confirm the same unique email in the Confirm Email Address field
     And "abcd4321" in the password field
     And "axxx4321" in the retype password field
-    And Check the "termsandconditions" checkbox
-    And Check the "notminor" checkbox
-    And Check the "ethicsandconduct" checkbox
+    And Check the "Terms and Conditions" checkbox
+    And Check the "Not a minor" checkbox
+    And Check the "Ethics and Conduct" checkbox
     And Click the Confirm and Join button
     Then Error "Password did not match" is displayed
 
@@ -44,8 +44,8 @@ Feature: Account
     And I confirm the same unique email in the Confirm Email Address field
     And "abcd4321" in the password field
     And "abcd4321" in the retype password field
-    And Check the "notminor" checkbox
-    And Check the "ethicsandconduct" checkbox
+    And Check the "Not a minor" checkbox
+    And Check the "Ethics and Conduct" checkbox
     And Click the Confirm and Join button
     Then Error "You must confirm that you have read and accepted our Terms and Conditions" is displayed
 
@@ -56,9 +56,9 @@ Feature: Account
     And I confirm the same unique email in the Confirm Email Address field
     And "<Password>" in the password field
     And "<RetypedPassword>" in the retype password field
-    And Check the "termsandconditions" checkbox
-    And Check the "notminor" checkbox
-    And Check the "ethicsandconduct" checkbox
+    And Check the "Terms and Conditions" checkbox
+    And Check the "Not a minor" checkbox
+    And Check the "Ethics and Conduct" checkbox
     And Click the Confirm and Join button
     Then Error "Last Name is required" is displayed
 

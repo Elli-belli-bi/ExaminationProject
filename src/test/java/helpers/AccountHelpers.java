@@ -11,12 +11,12 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class Account {
+public class AccountHelpers {
 
     private final WebDriver driver;
 
     // Constructor
-    public Account(WebDriver driver) {
+    public AccountHelpers(WebDriver driver) {
         this.driver = driver;
     }
 
@@ -32,7 +32,7 @@ public class Account {
         actions.moveByOffset(100, 200).click().perform();
     }
 
-    public void fillNameFields(String field, String value) {
+    public WebElement fillNameFields(String field, String value) {
         WebElement nameFields;
         switch (field.toLowerCase()) {
             case "firstname":
@@ -45,6 +45,7 @@ public class Account {
                 throw new IllegalArgumentException("Invalid field type: " + field);
         }
         nameFields.sendKeys(value);
+        return nameFields;
     }
 
     // Unique e-mail based on time stamp
@@ -83,14 +84,14 @@ public class Account {
 
     public void clickCheckbox(String checkboxName) {
         WebElement checkbox;
-        switch (checkboxName.toLowerCase()) {
-            case "termsandconditions":
+        switch (checkboxName) {
+            case "Terms and Conditions":
                 checkbox = driver.findElement(By.xpath("//label[@for='sign_up_25']"));
                 break;
-            case "notminor":
+            case "Not a minor":
                 checkbox = driver.findElement(By.xpath("//label[@for='sign_up_26']"));
                 break;
-            case "ethicsandconduct":
+            case "Ethics and Conduct":
                 checkbox = driver.findElement(By.xpath("//label[@for='fanmembersignup_agreetocodeofethicsandconduct']"));
                 break;
             default:
