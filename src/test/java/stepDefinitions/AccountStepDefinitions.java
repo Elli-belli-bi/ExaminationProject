@@ -13,8 +13,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class AccountStepDefinitions {
 
@@ -52,13 +51,14 @@ public class AccountStepDefinitions {
     public void inTheFirstNameField(String value) {
         WebElement firstNameField = accountHelpers.fillNameFields("firstname", value);
         assertTrue("First name field should be visible", firstNameField.isDisplayed());
+        assertEquals("First name field should contain the correct value", value, firstNameField.getAttribute("value"));
     }
 
     @And("{string} in the Last Name field")
     public void inTheLastNameField(String value) {
         WebElement lastNameField;
         if (value.isEmpty()) {
-            lastNameField = accountHelpers.fillNameFields("lastname", "");
+            lastNameField = accountHelpers.fillNameFields("lastname", ""); // Empty last name
         } else {
             lastNameField = accountHelpers.fillNameFields("lastname", value);
         }
@@ -100,7 +100,7 @@ public class AccountStepDefinitions {
     public void iShouldBeRedirectedToTheConfirmationPage() {
         String expectedUrlPart = "https://membership.basketballengland.co.uk/Account/SignUpConfirmation";
         String currentUrl = driver.getCurrentUrl();
-        assert currentUrl != null;
+        assertNotNull("URL should not be null", currentUrl);
         assertTrue("The user is not on the confirmation page.", currentUrl.contains(expectedUrlPart));
     }
 

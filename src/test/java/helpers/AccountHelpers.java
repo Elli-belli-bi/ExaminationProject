@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.NoSuchElementException;
 
 public class AccountHelpers {
 
@@ -20,8 +21,9 @@ public class AccountHelpers {
         this.driver = driver;
     }
 
+    // Enter a date of birth
     public void dateOfBirth(String dateOfBirth) {
-        WebElement birthDate = driver.findElement(By.name("DateOfBirth"));
+        WebElement birthDate = visible(By.name("DateOfBirth"));
         birthDate.sendKeys(dateOfBirth);
         closeDatePicker();
     }
@@ -32,14 +34,15 @@ public class AccountHelpers {
         actions.moveByOffset(100, 200).click().perform();
     }
 
+    // Enter values in name fields
     public WebElement fillNameFields(String field, String value) {
         WebElement nameFields;
         switch (field.toLowerCase()) {
             case "firstname":
-                nameFields = driver.findElement(By.name("Forename"));
+                nameFields = visible(By.name("Forename"));
                 break;
             case "lastname":
-                nameFields = driver.findElement(By.name("Surname"));
+                nameFields = visible(By.name("Surname"));
                 break;
             default:
                 throw new IllegalArgumentException("Invalid field type: " + field);
@@ -55,26 +58,28 @@ public class AccountHelpers {
         return "test_" + timestamp + "@test.se";
     }
 
+    // Enter values in e-mail fields
     public void fillEmails(String email, String field) {
         WebElement emailField;
         if (field.equals("email")) {
-            emailField = driver.findElement(By.name("EmailAddress"));
+            emailField = visible(By.name("EmailAddress"));
         } else if (field.equals("confirmEmail")) {
-            emailField = driver.findElement(By.name("ConfirmEmailAddress"));
+            emailField = visible(By.name("ConfirmEmailAddress"));
         } else {
             throw new IllegalArgumentException("Unknown field: " + field);
         }
         emailField.sendKeys(email);
     }
 
+    // Enter values in password fields
     public void fillPasswords(String password, String field) {
         WebElement passwordField;
         switch (field) {
             case "password":
-                passwordField = driver.findElement(By.name("Password"));
+                passwordField = visible(By.name("Password"));
                 break;
             case "confirmPassword":
-                passwordField = driver.findElement(By.name("ConfirmPassword"));
+                passwordField = visible(By.name("ConfirmPassword"));
                 break;
             default:
                 throw new IllegalArgumentException("Unknown password field: " + field);
@@ -82,17 +87,18 @@ public class AccountHelpers {
         passwordField.sendKeys(password);
     }
 
+    // Click a specific checkbox
     public void clickCheckbox(String checkboxName) {
         WebElement checkbox;
         switch (checkboxName) {
             case "Terms and Conditions":
-                checkbox = driver.findElement(By.xpath("//label[@for='sign_up_25']"));
+                checkbox = clickable(By.xpath("//label[@for='sign_up_25']"));
                 break;
             case "Not a minor":
-                checkbox = driver.findElement(By.xpath("//label[@for='sign_up_26']"));
+                checkbox = clickable(By.xpath("//label[@for='sign_up_26']"));
                 break;
             case "Ethics and Conduct":
-                checkbox = driver.findElement(By.xpath("//label[@for='fanmembersignup_agreetocodeofethicsandconduct']"));
+                checkbox = clickable(By.xpath("//label[@for='fanmembersignup_agreetocodeofethicsandconduct']"));
                 break;
             default:
                 throw new IllegalArgumentException("Invalid checkbox name: " + checkboxName);
@@ -100,11 +106,13 @@ public class AccountHelpers {
         checkbox.click();
     }
 
+    // Click the confirm and join button
     public void clickConfirmAndJoinButton() {
-        WebElement confirm = driver.findElement(By.cssSelector(".btn.btn-big.red"));
+        WebElement confirm = clickable(By.cssSelector(".btn.btn-big.red"));
         confirm.click();
     }
 
+    // Retrieves error or confirmation message
     public WebElement getMessage(String messageType) {
         WebElement message;
         switch (messageType.toLowerCase()) {
@@ -122,7 +130,21 @@ public class AccountHelpers {
 
     public WebElement visible(By by) {
         // Wait until the element is visible
-        return new WebDriverWait(driver, Duration.ofSeconds(10))
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.visibilityOfElementLocated(by));
+        if (element == null) {
+            throw new NoSuchElementException("Element not found: " + by.toString());
+        }
+        return element;
+    }
+
+    public WebElement clickable(By by) {
+        // Wait until the element is clickable
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.elementToBeClickable(by));
+        if (element == null) {
+            throw new NoSuchElementException("Element not found or not clickable: " + by.toString());
+        }
+        return element;
     }
 }
